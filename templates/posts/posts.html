@@ -11,3 +11,118 @@
     {% endfor%}
 
 {% endblock %}
+
+
+{#{% extends 'posts/base.html' %}#}
+{##}
+{#TITLE#}
+{#{% block title %} Posts {% endblock %}#}
+{##}
+{#CONTENT#}
+{#{% block content %}#}
+{#    {% load humanize %}#}
+{##}
+{#    ПОИСК#}
+{#<form method="get">#}
+{#    <div class="input-group mb-3">#}
+{#      <input name="s" type="text" class="form-control" placeholder="Введите название поста"#}
+{#             value="{{ search_str }}" aria-label="Recipient's username" aria-describedby="button-addon2">#}
+{#      <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>#}
+{#    </div>#}
+{#    <div>#}
+{#        <input type="date" name="d" value="">#}
+{#    </div>#}
+{#</form>#}
+{#<hr>#}
+{#<div class="row row-cols-3 row-cols-md-3 g-4">#}
+{#    {% for post in posts %}#}
+{#        <div class="col">#}
+{#            <div class="card" style="width: 18rem;">#}
+{#              <div class="card-body">#}
+{#                <h5 class="card-title">{{ post.title}}</h5>#}
+{#                  {% if user.id == post.user.id %}#}
+{#                <a href="{% url 'update' post.id %}"><span class="badge rounded-pill text-bg-primary">Изменить</span></a>#}
+{#                  {% endif %}#}
+{#                <a href="{% url 'get_post' post.id %}"><span class="badge rounded-pill text-bg-light">Читать</span></a>#}
+{#              </div>#}
+{#                <div class="card-footer">#}
+{#                    <small class="text-muted">{{ post.date | naturaltime }}</small>#}
+{#                </div>#}
+{#            </div>#}
+{#        </div>#}
+{#    {% endfor %}#}
+{#</div>#}
+{#{% endblock %}#}
+{##}
+{##}
+{#FOOTER#}
+{#{% block footer %}#}
+{#    {% load l10n %}#}
+{##}
+{##}
+{#<footer class="text-center text-lg-start text-muted">#}
+{#    <div class="container p-4">#}
+{##}
+{#        {% if num_pages != 1 %}#}
+{#        <nav aria-label="...">#}
+{#          <ul class="pagination justify-content-center">#}
+{##}
+{#          {% localize off %}#}
+            {# Первая страница #}
+{#            {% if page > 2 %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="{% url 'show_posts' %}?p=1&s={{ search_str }}">1 << </a>#}
+{#            </li>#}
+{#            {% endif %}#}
+{##}
+{#            <li class="page-item {% if page == 1 %}disabled{% endif %}">#}
+{#              <a class="page-link" href="{% url 'show_posts' %}?p={{ page | add:'-1' }}&s={{ search_str }}">Предыдущая</a>#}
+{#            </li>#}
+{##}
+            {# Предыдущая страница #}
+{#            {% if page != 1 %}#}
+{#                <li class="page-item">#}
+{#                    <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'-1' }}&s={{ search_str }}">{{ page|add:'-1' }}</a>#}
+{#                </li>#}
+{#            {% endif %}#}
+{##}
+{##}
+            {# Текущая страница #}
+{#            <li class="page-item active" aria-current="page">#}
+{#              <a class="page-link">{{ page }}</a>#}
+{#            </li>#}
+{##}
+{##}
+            {# Следующая страница #}
+{#            {% if num_pages != page %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'1' }}&s={{ search_str }}">{{ page|add:'1' }}</a>#}
+{#            </li>#}
+{#            {% endif %}#}
+{##}
+            {# Запасная страница #}
+{#            {% if page == 1 and page < num_pages %}#}
+{#            <li class="page-item">#}
+{#                <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'2' }}&s={{ search_str }}">{{ page|add:'2' }}</a>#}
+{#            </li>#}
+{#            {% endif %}#}
+{##}
+            {# Следующая страница #}
+{#            <li class="page-item {% if page == num_pages %}disabled{% endif %}">#}
+{#              <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'1' }}&s={{ search_str }}">Следующая</a>#}
+{#            </li>#}
+{##}
+            {# Последняя страница #}
+{#            {% if page < num_pages|add:'-1' %}#}
+{#            <li class="page-item">#}
+{#              <a class="page-link" href="{% url 'show_posts' %}?p={{ num_pages }}&s={{ search_str }}"> >> {{ num_pages }}</a>#}
+{#            </li>#}
+{#            {% endif %}#}
+{#          {% endlocalize %}#}
+{#          </ul>#}
+{#        </nav>#}
+{#    {% endif %}#}
+{#    </div>#}
+{#</footer>#}
+{##}
+{#{% endblock %}#}

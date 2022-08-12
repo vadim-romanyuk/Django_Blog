@@ -1,0 +1,73 @@
+{#{% extends 'posts/base.html' %}#}
+{##}
+{#{% block title %} Create {% endblock %}#}
+{##}
+{#{% block content %} {{ content | safe }} {% endblock %}#}
+
+
+
+
+{% extends 'posts/base.html' %}
+
+{% block title %} Create a New Post {% endblock %}
+
+{% block content %}
+{% load static %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+
+    {% if delete %}
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Удалить
+        </button>
+    {% endif %}
+    <br><br>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% if error %}
+            <div class="alert alert-danger" role="alert">{{ error }}</div>
+        {% endif %}
+
+        <div class="form-group">
+            <label for="title">Заголовок</label>
+            <input required type="text" name="title" class="form-control" value="{{ title }}">
+        </div>
+        <br>
+        Изображение
+        <div>
+            <input type="file" name="image">
+        </div>
+        <div class="form-group">
+            <label for="content">Введите содержание</label>
+            <textarea required name="content" class="form-control" style="height: 400px"></textarea>
+        </div>
+{#кнопка отправки#}
+        <div class="form-group">
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+    </form>
+
+{% if delete %}
+<!-- Модальное окно -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Вы уверены, что хотите удалить эту запись?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
+
+          <form method="post" action="{% url 'delete' post_id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger">Удалить</button>
+          </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

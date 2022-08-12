@@ -1,0 +1,16 @@
+{% extends 'posts/base.html' %}
+
+{% block title %} Create a New Post {% endblock %}
+
+{% block content %}
+{% load static %}
+<script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
+<script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
+
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_ul }}
+        <input type="submit" value="ОК">
+    </form>
+
+{% endblock %}
