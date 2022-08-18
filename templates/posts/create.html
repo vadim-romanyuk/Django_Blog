@@ -9,9 +9,12 @@
 
 {% extends 'posts/base.html' %}
 
-{% block title %} Create a New Post {% endblock %}
+{#{% block title %} Create a New Post {% endblock %}#}
 
 {% block content %}
+    {% if title_check == ok %}
+    <h1>{% block title %} НОВЫЙ ПОСТ {% endblock %}</h1>
+    {% endif %}
 {% load static %}
 <script type="text/javascript" src="{% static "ckeditor/ckeditor-init.js" %}"></script>
 <script type="text/javascript" src="{% static "ckeditor/ckeditor/ckeditor.js" %}"></script>
@@ -39,7 +42,7 @@
         </div>
         <div class="form-group">
             <label for="content">Введите содержание</label>
-            <textarea required name="content" class="form-control" style="height: 400px"></textarea>
+            <textarea required name="content" class="form-control" style="height: 400px">"{% if form.content %}{% endif %}"</textarea>
         </div>
 {#кнопка отправки#}
         <div class="form-group">

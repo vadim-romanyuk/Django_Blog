@@ -6,5 +6,5 @@ urlpatterns = [
     path('about/', posts_views.about, name='url_to_about'),
     # path('create', posts_views.create_post, name='create_post'),
     path('<str:post_id>', posts_views.posts),
-    path('create/', posts_views.create_post, name='url_to_create_post'),
+    path('create/', posts_views.CreateView.as_view(), name='url_to_create_post'),
 ]
