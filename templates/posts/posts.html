@@ -5,11 +5,20 @@
 {#{% block content %} {{ content }} {% endblock %}#}
 
 {% block content %}
+<div class="card-group"
+    {% for posts in posts %}
+     <div class="card" style="width: 18rem;">
+         <div class="card-body">
+        <h5 class="card-title">{{  posts.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ posts.date}}</h6>
+        <a href="#" class="card-link">Изменить</a>
+        <a href="{% url 'get_post' post.id %}" class="card-link">Посмотреть</a>
+{#             <a href="/posts/{{ post.id }}" class="card-link">Посмотреть</a>#}
 
-    {% for key, value in content.items %}
-        <p>{{ key }}:{{ value }}</p>
+     </div>
+    </div>
     {% endfor%}
-
+</div>
 {% endblock %}
 
 
