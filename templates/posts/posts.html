@@ -1,25 +1,30 @@
 {% extends 'posts/base.html' %}
-
+{% load l10n %}
 {% block title %} Posts {% endblock %}
 
 {#{% block content %} {{ content }} {% endblock %}#}
 
 {% block content %}
-<div class="card-group"
-    {% for posts in posts %}
-     <div class="card" style="width: 18rem;">
-         <div class="card-body">
-        <h5 class="card-title">{{  posts.title }}</h5>
-        <h6 class="card-subtitle mb-2 text-muted">{{ posts.date}}</h6>
-        <a href="#" class="card-link">Изменить</a>
+{#    {% load l10n %}#}
+{#    {% load i18n %}#}
+{#    {% get_current_language as L %}#}
+{#    <h1> {{ L }}</h1>#}
+<div class="card-group">
+    {% for post in posts %}
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+        <h5 class="card-title">{{  post.title }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ post.date}}</h6>
+        <a href="{% url 'update' post.id %}" class="card-link">Изменить</a>
         <a href="{% url 'get_post' post.id %}" class="card-link">Посмотреть</a>
-{#             <a href="/posts/{{ post.id }}" class="card-link">Посмотреть</a>#}
-
+    {#             <a href="/posts/{{ post.id }}" class="card-link">Посмотреть</a>#}
+        </div>
      </div>
-    </div>
     {% endfor%}
 </div>
 {% endblock %}
+
+
 
 
 {#{% extends 'posts/base.html' %}#}

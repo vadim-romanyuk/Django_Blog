@@ -16,6 +16,27 @@ def show_posts(request, post_id: str = None):
     return render(request, 'posts/posts.html', {'posts': posts_})
 
 
+def update_post(request, post_id):
+    print('UPDATE FUNC')
+    user_post = models.Post.objects.get(id=post_id)
+
+    if request.method == 'GET':
+        return render(request, 'posts/create.html', {'title': user_post.title, 'content': user_post.content, 'delete': True})
+
+    elif request.method == 'POST':
+        print(request.POST)
+        title = request.POST.get('title') or ''
+        content = request.POST.get('content') or ''
+        if title and content:
+            user_post.title = title
+            user_post.content = content
+            user_post.save()
+            return redirect('/posts')
+        else:
+            error = 'Укажите все поля'
+            return render(request, 'posts/create.html', {'title': title, 'content': content, 'error': error, 'delete': True})
+
+
 def post(request, post_id):
     user_post = models.Post.objects.get(id=post_id)
     return render(request, 'posts/user_post.html', {'post': user_post})

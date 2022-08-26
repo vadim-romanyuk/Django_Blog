@@ -3,6 +3,14 @@
 {% block title %} Create a New Post {% endblock %}
 
 {% block content %}
+        {% if delete %}
+             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
+        {%  endif %}
+
+{#    {% load l10n %}#}
+{#    {% load i18n %}#}
+{#    {% get_current_language as L %}#}
+{#    <h1> {{ L }}</h1>#}
 
     <form method="post">
         {% csrf_token %}
@@ -17,13 +25,34 @@
 
          <div class="form-group">
           <label for="content" >Введите содержание</label>
-             <textarea required name="content" class="form-control" style="height: 400px"></textarea>
+             <textarea required name="content" class="form-control" style="height: 400px">{{ content }}</textarea>
           </div>
 
         <div class="form-group">
             <button type="submit" class="btn btn-primary">Submit</button>
         </div>
     </form>
+
+{% if delete %}
+   <!-- Модальное окно -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Вы уверены, что хотите удалить пост?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Удалить"></button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        <button type="button" class="btn btn-primary">Сохранить изменения</button>
+      </div>
+    </div>
+  </div>
+</div>
+{%  endif %}
 
 {% endblock %}
 
