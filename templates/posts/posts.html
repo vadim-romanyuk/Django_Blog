@@ -9,6 +9,13 @@
 {#    {% load i18n %}#}
 {#    {% get_current_language as L %}#}
 {#    <h1> {{ L }}</h1>#}
+<form method="get">
+    <div class="input-group mb-3">
+  <input name="search" type="text" class="form-control" placeholder="Введите название поста" aria-label="Имя пользователя получателя" aria-describedby="button-addon2">
+  <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>
+</div>
+</form>
+
 <div class="card-group">
     {% for post in posts %}
     <div class="card" style="width: 18rem;">
