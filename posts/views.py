@@ -120,7 +120,7 @@ def create_post(request, user=None):
         if title and content:
             # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
             # user_post.save()
-            models.Post.objects.create(title=title, content=content)
+            models.Post.objects.create(title=title, content=content, user=request.user)
             return redirect('/')
         else:
             error = 'Укажите все поля'
