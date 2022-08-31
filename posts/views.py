@@ -15,15 +15,24 @@ def home(request):
 
 def show_posts(request, post_id: str = None):
     if request.GET.get('search'):
-        posts_ = models.Post.objects.filter(title__contains=request.GET['search'])
+        s = request.GET['search']
+        posts_ = list(models.Post.objects.filter(title__contains=s))
+        posts_ += list(models.Post.objects.filter(content__contains=s).exclude(title__contains=s))
     else:
         posts_ = models.Post.objects.all()
-    return render(request, 'posts/posts.html', {'posts': posts_})
+    return render(request, 'posts/posts.html', {'posts': posts_, 'search_str': request.GET.get('search', '')})
 
 
 def update_post(request, post_id):
     print('UPDATE FUNC')
-    user_post = models.Post.objects.get(id=post_id)
+    try:
+        user_post = models.Post.objects.get(id=post_id)
+
+        if request.user != user_post.user and not request.user.is_superuser: #нельзя редактировать пост другого пользователя
+            return HttpResponseNotAllowed(request)
+
+    except models.Post.DoesNotExist:
+        return HttpResponseNotFound(request)
 
     if request.method == 'GET':
         return render(request, 'posts/create.html',
@@ -94,7 +103,7 @@ class CreateView(View):
         print(request.GET)
         return render(request, 'posts/create.html')
 
-    def post(self, request):
+    def post(self, request, user_form=None):
         print(request.POST)
         if request.method == 'GET':
             return render(request, 'posts/create.html', {'form': user_form, 'qwert': 'asdfdsad'})
@@ -120,7 +129,7 @@ def create_post(request, user=None):
         if title and content:
             # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
             # user_post.save()
-            models.Post.objects.create(title=title, content=content)
+            models.Post.objects.create(title=title, content=content, user=request.user)
             return redirect('/')
         else:
             error = 'Укажите все поля'

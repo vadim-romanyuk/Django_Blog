@@ -4,7 +4,9 @@
 
 {% block content %}
         {% if delete %}
-             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">Удалить</button>
+             <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                 Удалить
+             </button>
         {%  endif %}
 
     {% load l10n %}
@@ -49,7 +51,6 @@
               {% csrf_token %}
               <button type="submit" class="btn btn-danger">Удалить</button>
           </from>
-
       </div>
     </div>
   </div>
