@@ -29,6 +29,7 @@ def update_post(request, post_id):
         user_post = models.Post.objects.get(id=post_id)
 
         if request.user != user_post.user and not request.user.is_superuser: #нельзя редактировать пост другого пользователя
+
             return HttpResponseNotAllowed(request)
 
     except models.Post.DoesNotExist:
