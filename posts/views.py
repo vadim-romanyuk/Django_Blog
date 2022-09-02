@@ -71,6 +71,7 @@ def about(request):
 
 
 def delete(request, post_id):
+    print("delete")
     if request.method == 'POST':
         models.Post.objects.get(id=post_id).delete()
         return redirect('/posts/')
