@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+{{ form }}
+
+{#    {% if form.errors %}#}
+{#      <p>Неверный логин или пароль!</p>#}
+{#    {% endif %}#}
+{##}
+{#    {% if next %}#}
+{#      {% if user.is_authenticated %}#}
+{#        <p>У вашей учетной записи нет доступа к этой странице. Чтобы продолжить,#}
+{#пожалуйста, войдите в систему с учетной записью, которая имеет доступ</p>#}
+{#      {% else %}#}
+{#        <p>Пожалуйста, войдите, чтобы увидеть эту страницу.</p>#}
+{#      {% endif %}#}
+{#    {% endif %}#}
+{##}
+{##}
+{#    <form method="post">#}
+{##}
+{#        {% csrf_token %}#}
+{##}
+{#        <div>#}
+{#            <label>#}
+{#                {{ form.username.label_tag }}#}
+{#                {{ form.username }}#}
+{#            </label>#}
+{#        </div>#}
+{##}
+{#        <div>#}
+{#            <label>#}
+{#                {{ form.password.label_tag }}#}
+{#                {{ form.password }}#}
+{#            </label>#}
+{#        </div>#}
+{##}
+{#        <input type="submit" value="Войти">#}
+{#    </form>#}
+</body>
+</html>
