@@ -11,3 +11,6 @@ class Post(models.Model):
     content = models.TextField()
     date = models.DateTimeField(default=datetime.datetime.now)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
+
+    class Meta:
+        db_table = 'posts'
