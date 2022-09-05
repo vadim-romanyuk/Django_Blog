@@ -71,6 +71,7 @@ def about(request):
 
 
 def delete(request, post_id):
+
     if request.method == 'POST':
         models.Post.objects.get(id=post_id).delete()
         return redirect('/posts/')
@@ -131,7 +132,7 @@ def create_post(request, user=None):
             # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
             # user_post.save()
             models.Post.objects.create(title=title, content=content, user=request.user)
-            return redirect('/')
+            return redirect('/posts')
         else:
             error = 'Укажите все поля'
             return render(request, 'posts/create.html', {'title': title, 'content': content, 'error': error})

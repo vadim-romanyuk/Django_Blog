@@ -46,11 +46,16 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Нет</button>
-
-          <from method="post" action="{% url 'delete' post_id %}">
-              {% csrf_token %}
-              <button type="submit" class="btn btn-danger">Удалить</button>
-          </from>
+        <form action="{% url 'delete' post_id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Удалить"
+                    class="btn btn-danger btn-sm">
+        {#            onclick="return confirm('Are you sure you want to delete this post?')">#}
+        </form>
+{#          <from method="post" action="{% url 'delete' post_id %}">#}
+{#              {% csrf_token %}#}
+{#              <input type="submit" class="btn btn-danger">Удалить</input>#}
+{#          </from>#}
       </div>
     </div>
   </div>
