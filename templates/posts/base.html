@@ -35,9 +35,19 @@
                 <li class="nav-item active">
                 <a class="nav-link" href="/info">Info</a>
                 </li>
+                {% if user.is_aurhenticated %}
                 <li class="nav-item active">
                 <a class="nav-link" href="{% url 'url_to_create_post'%}">Create</a>
-            </li>
+                  </li>
+                     <li class="nav-item active">
+                <a class="nav-link" href="{% url 'logout'%}">Logout</a>
+                </li>
+                {% else %}
+                     <li class="nav-item active">
+                <a class="nav-link" href="{% url 'login'%}">Login</a>
+                </li>
+                {% endif %}
+
             </ul>
         </div>
     </nav>
