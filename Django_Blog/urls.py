@@ -22,9 +22,5 @@ urlpatterns = [
 
     path('', posts_views.home, name='home'),
 
-    path('posts/', include('posts.urls')),
-
-    #login
-
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('posts/', include('posts.urls'))
 ]
