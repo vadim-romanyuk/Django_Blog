@@ -24,10 +24,11 @@
         <h6 class="card-subtitle mb-2 text-muted">{{ post.date}}</h6>
 {#        {{ user.username }}|{{ post.user.username }}#}
          {% if user.username == post.user.username %}
-        <a href="{% url 'update' post.id %}" class="card-link">Изменить</a>
-            {% endif %}
+            <a href="{% url 'update' post.id %}" class="card-link">Изменить</a>
+         {% endif %}
         <a href="{% url 'get_post' post.id %}" class="card-link">Посмотреть</a>
     {#             <a href="/posts/{{ post.id }}" class="card-link">Посмотреть</a>#}
+
         </div>
      </div>
     {% endfor%}

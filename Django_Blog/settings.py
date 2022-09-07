@@ -81,13 +81,21 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'posts',
-        'USER': 'root',
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.mysql',
+    #     'NAME': 'posts',
+    #     'USER': 'root',
+    #     'PASSWORD': 'TdQ1spCU/',
+    #     'HOST': '127.0.0.1',
+    #     'PORT': '3306'
+    # }
+'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'djangotest_db',
+        'USER': 'django',
         'PASSWORD': 'TdQ1spCU/',
         'HOST': '127.0.0.1',
-        'PORT': '3306'
+        'PORT': '5432'
     }
 }
 
@@ -143,5 +151,5 @@ STATICFILES_DIRS = [BASE_DIR / 'static']
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = '/posts'
-LOGOUT_REDIRECT_URL = '/posts'
+LOGIN_REDIRECT_URL = '/posts/'
+LOGOUT_REDIRECT_URL = '/'

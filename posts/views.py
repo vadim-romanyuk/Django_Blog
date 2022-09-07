@@ -5,6 +5,7 @@ from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
 from datetime import datetime
 
+
 # Create your views here.
 
 
@@ -77,6 +78,13 @@ def delete(request, post_id):
         return redirect('/posts/')
     else:
         return HttpResponseNotAllowed(request)
+
+
+# def delete(request, post_id):
+#     post = Post.objects.get()
+#     post.delete()
+#     # messages = [f'"{post.title}" was successfully deleted!']
+#     return redirect('home')
 
 
 

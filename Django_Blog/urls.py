@@ -20,7 +20,8 @@ from posts import views as posts_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', posts_views.home, name='home'),
+    # for POSTs
+    path('', posts_views.show_posts, name='home'),
     path('posts/', include('posts.urls')),
     # LOGIN
     path('accounts/', include('django.contrib.auth.urls'))
