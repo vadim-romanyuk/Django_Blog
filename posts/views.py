@@ -12,7 +12,7 @@ from faker import Faker
 
 def fake_create_user(request):
     f = Faker('ru_RU')
-    for i in range(50):
+    for i in range(100):
         print(i)
         p = f.profile()
         User.objects.create(
@@ -21,6 +21,29 @@ def fake_create_user(request):
             password=f.password(length=8)
         )
     return redirect('/')
+
+
+def fake_create_posts(request):
+    f = Faker('ru_RU')
+    users = User.objects.all()
+    for u in users:
+        for i in range(10):
+            models.Post.objects.create(
+                title=f.sentence(nb_words=5),
+                content=f.sentence(nb_words=10),
+                user=u
+            )
+    return redirect('/')
+
+
+def profile(request, user_name):
+    try:
+        user_profile = models.Profile.objects.get(user_id=user_name)
+        posts = models.Post.objects.filter(user_id=user_name)
+        return render(request, 'registration/profile.html', {'user': user_profile, 'posts':posts})
+    except (User.DoesNotExist, models.Profile.DoesNotExist):
+        return redirect('/')
+
 
 # Create your views here.
 

@@ -1,0 +1,100 @@
+{% extends 'posts/base.html' %}
+
+{% block title %}{{ profile.user.username }}{% endblock %}
+
+{% block content %}
+    {% load humanize %}
+
+    <h1>{{ profile.user.username }}</h1>
+    <h2>{{ profile.phone }} | {{ profile.address }}</h2>
+
+    <hr>
+<div class="row row-cols-3 row-cols-md-3 g-4">
+{% with p_user=posts.0.user %}
+    {% for post in posts %}
+        <div class="col">
+            <div class="card" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{ post.title}}</h5>
+                  {% if user == p_user %}
+                <a href="{% url 'update' post.id %}"><span class="badge rounded-pill text-bg-primary">Изменить</span></a>
+                  {% endif %}
+                <a href="{% url 'get_post' post.id %}"><span class="badge rounded-pill text-bg-light">Читать</span></a>
+              </div>
+                <div class="card-footer">
+                    <small class="text-muted">{{ post.date | naturaltime }}</small>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+{% endwith %}
+</div>
+{% endblock %}
+
+
+{#FOOTER#}
+{% block footer %}
+    {% load l10n %}
+
+<footer class="text-center text-lg-start text-muted">
+    <div class="container p-4">
+        <nav aria-label="...">
+          <ul class="pagination justify-content-center">
+
+          {% localize off %}
+            {# Первая страница #}
+            {% if page > 2 %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'profile' profile.user.username %}?p=1">1 << </a>
+            </li>
+            {% endif %}
+
+            <li class="page-item {% if page == 1 %}disabled{% endif %}">
+              <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ page|add:'-1' }}">Предыдущая</a>
+            </li>
+
+            {# Предыдущая страница #}
+            {% if page != 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ page|add:'-1' }}">{{ page|add:'-1' }}</a>
+                </li>
+            {% endif %}
+
+
+            {# Текущая страница #}
+            <li class="page-item active" aria-current="page">
+              <a class="page-link">{{ page }}</a>
+            </li>
+
+
+            {# Следующая страница #}
+            {% if num_pages != page %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ page|add:'1' }}">{{ page|add:'1' }}</a>
+            </li>
+            {% endif %}
+
+            {# Запасная страница #}
+            {% if page == 1 and page < num_pages %}
+            <li class="page-item">
+                <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ page|add:'2' }}">{{ page|add:'2' }}</a>
+            </li>
+            {% endif %}
+
+            {# Следующая страница #}
+            <li class="page-item {% if page == num_pages %}disabled{% endif %}">
+              <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ page|add:'1' }}">Следующая</a>
+            </li>
+
+            {# Последняя страница #}
+            {% if page < num_pages|add:'-1' %}
+            <li class="page-item">
+              <a class="page-link" href="{% url 'profile' profile.user.username %}?p={{ num_pages }}"> >> {{ num_pages }}</a>
+            </li>
+            {% endif %}
+          {% endlocalize %}
+          </ul>
+        </nav>
+    </div>
+</footer>
+{% endblock %}
