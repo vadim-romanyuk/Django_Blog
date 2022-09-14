@@ -10,4 +10,6 @@ urlpatterns = [
     path('<int:post_id>', posts_views.post, name='get_post'),
     path('delete/<int:post_id>', posts_views.delete, name='delete'),
     # path('create/', posts_views.CreateView.as_view(), name='url_to_create_post'),
+# FAKE
+    path('fake/users', posts_views.fake_create_user)
 ]

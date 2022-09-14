@@ -1,10 +1,26 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponse, redirect
 from posts.forms import CreateForm
 from django.views import View
 from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
 from datetime import datetime
+from faker import Faker
 
+# Fake
+
+
+def fake_create_user(request):
+    f = Faker('ru_RU')
+    for i in range(50):
+        print(i)
+        p = f.profile()
+        User.objects.create(
+            username=p['username'],
+            email=p['mail'],
+            password=f.password(length=8)
+        )
+    return redirect('/')
 
 # Create your views here.
 
@@ -45,10 +61,16 @@ def update_post(request, post_id):
         title = request.POST.get('title') or ''
         content = request.POST.get('content') or ''
         if title and content:
-            user_post.title = title
-            user_post.content = content
-            user_post.date = datetime.now()
-            user_post.save()
+            update_fields = []
+            if user_post.title != title:
+                update_fields.append('title')
+                user_post.title = title
+
+            if user_post.content != content:
+                update_fields.append('content')
+                user_post.content = content
+                # user_post.date = datetime.now()
+            user_post.save(update_fields=update_fields or None)
             return redirect('/posts')
         else:
             error = 'Укажите все поля'
