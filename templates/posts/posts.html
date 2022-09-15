@@ -17,7 +17,9 @@
 </form>
 
 <div class="card-group">
+    <div class="row">
     {% for post in posts %}
+    <div class="col-md-3">
     <div class="card" style="width: 18rem;">
         <div class="card-body">
         <h5 class="card-title">{{  post.title }}</h5>
@@ -28,7 +30,7 @@
          {% endif %}
         <a href="{% url 'get_post' post.id %}" class="card-link">Посмотреть</a>
     {#             <a href="/posts/{{ post.id }}" class="card-link">Посмотреть</a>#}
-
+        </div>
         </div>
      </div>
     {% endfor%}

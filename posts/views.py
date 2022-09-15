@@ -12,7 +12,7 @@ from faker import Faker
 
 def fake_create_user(request):
     f = Faker('ru_RU')
-    for i in range(50):
+    for i in range(100):
         print(i)
         p = f.profile()
         User.objects.create(
@@ -21,6 +21,27 @@ def fake_create_user(request):
             password=f.password(length=8)
         )
     return redirect('/')
+
+def fake_create_posts(request):
+    f = Faker('ru_RU')
+    users = User.objects.all()
+    for u in users:
+        for i in range(10):
+            models.Post.objects.create(
+                title=f.sentence(nb_words=5),
+                content=f.sentence(nb_words=10),
+                user=u
+            )
+    return redirect('/')
+
+
+def profile(request, user_name):
+    try:
+        user_profile = models.Profile.objects.get(user__username=user_name)
+        posts_profile = models.Post.objects.filter(user__username=user_name)
+        return render(request, 'registration/profile.html', {'user': user_profile, 'posts': posts_profile})
+    except (User.DoesNotExist, models.Profile.DoesNotExist):
+        return redirect('/')
 
 # Create your views here.
 
@@ -37,6 +58,7 @@ def show_posts(request, post_id: str = None):
         posts_ += list(models.Post.objects.filter(content__contains=s).exclude(title__contains=s))
     else:
         posts_ = models.Post.objects.all()
+        print('all_posts', len(posts_))
     return render(request, 'posts/posts.html', {'posts': posts_, 'search_str': request.GET.get('search', '')})
 
 
@@ -166,4 +188,3 @@ def create_post(request, user=None):
         else:
             error = 'Укажите все поля'
             return render(request, 'posts/create.html', {'title': title, 'content': content, 'error': error})
-
