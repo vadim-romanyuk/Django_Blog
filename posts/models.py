@@ -63,7 +63,7 @@ def create_profile(sender, instance, created, **kwargs):
         Profile.objects.create(
             user=instance,
             phone=f.phone_number(),
-            address=f.address
+            address=str(f.address())
         )
     # print('create_profile, kwargs:', kwargs)
 
