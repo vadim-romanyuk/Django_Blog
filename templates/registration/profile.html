@@ -1,9 +1,9 @@
 {% extends 'posts/base.html' %}
 
-{% block title %}{{ user.username }}{% endblock %}
+{% block title %}{{ user.user.username }}{% endblock %}
 
 {% block content %}
-{#    {% load humanize %}#}
+    {% load humanize %}
 
     <h1>{{ user.user.username }}</h1>
     <h2>{{ user.phone }} | {{ user.address }}</h2>
@@ -22,7 +22,7 @@
                 <a href="{% url 'get_post' post.id %}"><span class="badge rounded-pill text-bg-light">Читать</span></a>
               </div>
                 <div class="card-footer">
-{#                    <small class="text-muted">{{ post.date | naturaltime }}</small>#}
+                    <small class="text-muted">{{ post.date | naturaltime }}</small>
                 </div>
             </div>
         </div>

@@ -1,14 +1,20 @@
 {% extends 'posts/base.html' %}
 
-
 {% block title %}{{ post.title }}{% endblock %}
 
 {% block content %}
-    <h1> {{ post.title }}</h1>
-    <span class="badge text-bg-success">{{ user }} </span>
-    <h5>{{ post.date }} </a></h5>
-    <br>
-    <div class="content">
-        {{ post.content | linebreaks }}
+    <h1>{{ post.title }}</h1>
+    <span>{{ post.date }}</span> <a href="{% url 'profile' user %}"><span class="badge text-bg-success">{{ user }}</span></a>
+
+    <hr>
+{#    {% if post.image %}#}
+{#    <div style="text-align: center">#}
+{#        <img src="{{ post.image.url }}" style="max-height: 300px">#}
+{#    </div>#}
+{#        <hr>#}
+{#    {% endif %}#}
+
+    <div class="container">
+        <span class="">{{ post.content | safe }}</span>
     </div>
- {% endblock %}
+{% endblock %}

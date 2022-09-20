@@ -6,6 +6,8 @@ from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
 from datetime import datetime
 from faker import Faker
+from django.core.paginator import Paginator
+from django.db.models import Q
 
 # Fake
 
@@ -26,10 +28,11 @@ def fake_create_posts(request):
     f = Faker('ru_RU')
     users = User.objects.all()
     for u in users:
-        for i in range(10):
+        for i in range(1000):
             models.Post.objects.create(
                 title=f.sentence(nb_words=5),
                 content=f.sentence(nb_words=10),
+                date=f.date_time_between(),
                 user=u
             )
     return redirect('/')
@@ -51,15 +54,69 @@ def home(request):
     return render(request, 'posts/base.html')
 
 
-def show_posts(request, post_id: str = None):
-    if request.GET.get('search'):
-        s = request.GET['search']
-        posts_ = list(models.Post.objects.filter(title__contains=s))
-        posts_ += list(models.Post.objects.filter(content__contains=s).exclude(title__contains=s))
+# def show_posts(request, post_id: str = None):
+#     if request.GET.get('search'):
+#         s = request.GET['search']
+#         posts_ = list(models.Post.objects.filter(title__contains=s))
+#         posts_ += list(models.Post.objects.filter(content__contains=s).exclude(title__contains=s))
+#     else:
+#         posts_ = models.Post.objects.all()
+#         print('all_posts', len(posts_))
+#     return render(request, 'posts/posts.html', {'posts': posts_, 'search_str': request.GET.get('search', '')})
+
+
+def show_posts(request):
+    posts_limit = 50
+
+    try:
+        p = int(request.GET.get('p',1))
+    except ValueError:
+        p = 1
+
+    if request.GET.get('d'):
+        date = datetime.datetime.strptime(request.GET['d'], '%Y-%m-%d')
+        date_to = date + datetime.timedelta(days=1)
+        date_query = (Q(date__gte=date) & Q(date__lt=date_to))
+
     else:
-        posts_ = models.Post.objects.all()
-        print('all_posts', len(posts_))
-    return render(request, 'posts/posts.html', {'posts': posts_, 'search_str': request.GET.get('search', '')})
+        date_query =Q()
+
+    if request.GET.get('s'):
+        s = request.GET['s']
+
+        q1 = models.Post.objects.filter(
+            date_query & Q(title_contains=s) & ~Q(content_contains=s)
+        ).order_by('-date')
+
+        print(q1.query)
+
+        q2 = models.Post.objects.filter(
+            date_query & ~Q(title_contains=s) & Q(content_contains=s)
+        ).order_by('-date')
+
+        psges = Paginator(list(q1) + list(q2), posts_limit)
+
+    else:
+        q = models.Post.objects.filter(date_query).order_by('-date').all()
+        print(q.query)
+        pages = Paginator(q, posts_limit)
+
+    if p > pages.num_pages:
+        p = pages.num_pages
+    if p < 1:
+        p = 1
+
+    print(pages.count)
+    return render(
+        request, 'posts/posts.html',
+        {
+            'posts': pages.page(p),
+            'search_str' : request.GET.get('s', ''),
+            'page' : p,
+            'num_pages': int(pages.num_pages),
+        }
+    )
+
 
 
 def update_post(request, post_id):
