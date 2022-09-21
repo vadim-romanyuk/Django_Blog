@@ -9,7 +9,7 @@ import datetime
 from faker import Faker
 from django.core.paginator import Paginator
 from django.db.models import Q
-
+from django.db import transaction
 # Fake
 
 
@@ -24,19 +24,38 @@ def fake_create_user(request):
             password=f.password(length=8)
         )
     return redirect('/')
+# просто фэйк
+# def fake_create_posts(request):
+#     f = Faker('ru_RU')
+#     users = User.objects.all()
+#     for u in users:
+#         for i in range(1000):
+#             models.Post.objects.create(
+#                 title=f.sentence(nb_words=5),
+#                 content=f.sentence(nb_words=10),
+#                 date=f.date_time_between(),
+#                 user=u
+#             )
+#     return redirect('/')
 
+# фэйк с bulk
 def fake_create_posts(request):
     f = Faker('ru_RU')
     users = User.objects.all()
     for u in users:
-        for i in range(1000):
-            models.Post.objects.create(
+        models.Post.objects.bulk_create([models.Post(
                 title=f.sentence(nb_words=5),
                 content=f.sentence(nb_words=10),
                 date=f.date_time_between(),
                 user=u
-            )
+            ) for _ in range(1000)])
     return redirect('/')
+
+
+
+
+
+
 
 
 def profile(request, user_name):
@@ -119,7 +138,7 @@ def show_posts(request):
     )
 
 
-
+@transaction.atomic
 def update_post(request, post_id):
     print('UPDATE FUNC')
     try:
@@ -150,7 +169,9 @@ def update_post(request, post_id):
                 update_fields.append('content')
                 user_post.content = content
                 # user_post.date = datetime.now()
-            user_post.save(update_fields=update_fields or None)
+            with transaction.atomic():
+                user_post.save(update_fields=update_fields or None)
+
             return redirect('/posts')
         else:
             error = 'Укажите все поля'

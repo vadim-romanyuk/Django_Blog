@@ -155,3 +155,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/posts/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# if DEBUG:
+#     INTERNAL_IPS = ('127.0.0.1',)
+#     MIDDLEWARE += (
+#         'debug_toolbar:middleware.DebugToolbarMiddleware',
+#     )

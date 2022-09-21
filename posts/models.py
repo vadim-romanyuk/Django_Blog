@@ -27,7 +27,7 @@ from faker import Faker
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = models.TextField()
-    date = models.DateTimeField(default=datetime.datetime.now)
+    date = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -46,6 +46,14 @@ class Profile(models.Model):
     address = models.CharField(max_length=500, null=True)
     hobby = models.CharField(max_length=300, null=True)
 
+
+    class Meta:
+        indexes = [
+            models.Index(
+                name='profile_idx',
+                fields=['phone', 'address']
+            )
+        ]
 
 # class Log(models.Model):
 #     datetime = models.DateTimeField(auto_now_add=True)
