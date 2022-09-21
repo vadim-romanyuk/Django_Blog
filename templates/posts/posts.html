@@ -11,8 +11,12 @@
     <h1> {{ L }}</h1>
 <form method="get">
     <div class="input-group mb-3">
-  <input name="search" type="text" class="form-control" placeholder="Введите название поста" aria-label="Имя пользователя получателя" aria-describedby="button-addon2">
+  <input name="s" type="text" class="form-control" placeholder="Введите название поста"
+         value="{{  search_str }}" aria-label="Имя пользователя получателя" aria-describedby="button-addon2">
   <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Найти</button>
+</div>
+<div>
+    <input type="date" name="d" value="">
 </div>
 </form>
 

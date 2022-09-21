@@ -4,7 +4,8 @@ from posts.forms import CreateForm
 from django.views import View
 from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
-from datetime import datetime
+# from datetime import datetime
+import datetime
 from faker import Faker
 from django.core.paginator import Paginator
 from django.db.models import Q
@@ -85,16 +86,16 @@ def show_posts(request):
         s = request.GET['s']
 
         q1 = models.Post.objects.filter(
-            date_query & Q(title_contains=s) & ~Q(content_contains=s)
+            date_query & Q(title__contains=s) & ~Q(content__contains=s)
         ).order_by('-date')
 
         print(q1.query)
 
         q2 = models.Post.objects.filter(
-            date_query & ~Q(title_contains=s) & Q(content_contains=s)
+            date_query & ~Q(title__contains=s) & Q(content__contains=s)
         ).order_by('-date')
 
-        psges = Paginator(list(q1) + list(q2), posts_limit)
+        pages = Paginator(list(q1) + list(q2), posts_limit)
 
     else:
         q = models.Post.objects.filter(date_query).order_by('-date').all()
@@ -106,7 +107,7 @@ def show_posts(request):
     if p < 1:
         p = 1
 
-    print(pages.count)
+    # print(pages.count)
     return render(
         request, 'posts/posts.html',
         {

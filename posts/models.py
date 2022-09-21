@@ -32,6 +32,12 @@ class Post(models.Model):
 
     class Meta:
         db_table = 'posts'
+        indexes = [
+            models.Index(
+                name='posts_date_time_idx',
+                fields=['date']
+            )
+        ]
 
 
 class Profile(models.Model):
