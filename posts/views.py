@@ -24,6 +24,8 @@ def fake_create_user(request):
             password=f.password(length=8)
         )
     return redirect('/')
+
+
 # просто фэйк
 # def fake_create_posts(request):
 #     f = Faker('ru_RU')
@@ -48,7 +50,7 @@ def fake_create_posts(request):
                 content=f.sentence(nb_words=10),
                 date=f.date_time_between(),
                 user=u
-            ) for _ in range(1000)])
+            ) for _ in range(10000)])
     return redirect('/')
 
 
