@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from faker import Faker
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -26,8 +27,8 @@ from faker import Faker
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    content = models.TextField()
-    date = models.DateTimeField(auto_now_add=True)  #default=datetime.datetime.now
+    content = RichTextField()     #models.TextField()
+    date = models.DateTimeField(default=datetime.datetime.now)  #default=datetime.datetime.now   auto_now_add=True
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
     class Meta:
@@ -38,6 +39,7 @@ class Post(models.Model):
                 fields=['date']
             )
         ]
+        ordering = ['-date']
 
     def __str__(self):
         return self.title

@@ -17,6 +17,7 @@ import django
 from django.contrib import admin
 from django.urls import path, include
 from posts import views as posts_views
+import debug_toolbar
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,5 +25,7 @@ urlpatterns = [
     path('', posts_views.show_posts, name='home'),
     path('posts/', include('posts.urls')),
     # LOGIN
-    path('accounts/', include('django.contrib.auth.urls'))
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('__debug__/', include(debug_toolbar.urls)),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
 ]
