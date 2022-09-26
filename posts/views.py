@@ -10,6 +10,7 @@ from faker import Faker
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db import transaction
+from .forms import PostCreateForm
 # Fake
 
 
@@ -255,7 +256,7 @@ def create_post(request, user=None):
     print('CREATE FUNC')
 
     if request.method == 'GET':
-        return render(request, 'posts/create.html')
+        return render(request, 'posts/create_2.html', {'form': user_form})
 
     elif request.method == 'POST':
         print(request.POST)

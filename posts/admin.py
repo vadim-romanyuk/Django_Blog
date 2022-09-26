@@ -27,8 +27,8 @@ class PostsAdmin(admin.ModelAdmin):
     def user_info(self, post: Post):
         u = Profile.objects.get(user_id=post.user.id)
         return mark_safe(f"""
-<li style='color: green;">{u.phone}</li>
-<li style='color: red;">{u.address}</li>
+<li style="color: green;">{u.phone}</li>
+<li style="color: red;">{u.address}</li>
 """)
 
     @admin.display(description='Open')
@@ -54,9 +54,9 @@ class ProfileAdmin(admin.ModelAdmin):
     def user_info(self, user: User):
         u = Profile.objects.get(user_id=user.id)
         return mark_safe(f"""
-    <li style='color: green;">{u.phone}</li> 
-    <li style='color: red;">{u.address}</li>
-            """)
+    <li style="color: green;">{u.phone}</li> 
+    <li style="color: red;">{u.address}</li>
+    """)
 
     @admin.display(description='#posts')
     def posts_count(self, user: User):

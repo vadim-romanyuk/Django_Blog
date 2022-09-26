@@ -18,7 +18,7 @@
     {% get_current_language as L %}
     <h1> {{ L }}</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
         {% if error %}
         <div class="alert alert-danger" role="alert">{{  error }}</div>
@@ -28,6 +28,12 @@
           <label for="title" >Заголовок</label>
           <input required type="text" name="title" class="form-control" value=" {{ title }}">
         </div>
+
+    <br>
+        <div>
+          <input type="file" name="image"
+        </div>
+
 
          <div class="form-group">
           <label for="content" >Введите содержание</label>
