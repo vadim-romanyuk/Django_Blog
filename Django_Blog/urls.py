@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path, include
 from posts import views as posts_views
 import debug_toolbar
+from django.contrib.staticfiles.utils import settings
+from django.contrib.staticfiles.urls import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -28,4 +30,4 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
     path('ckeditor/', include('ckeditor_uploader.urls')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

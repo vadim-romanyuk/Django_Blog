@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponse, redirect
-from posts.forms import CreateForm
+from posts.forms import PostCreateForm
 from django.views import View
 from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
@@ -253,6 +253,7 @@ class CreateView(View):
 
 
 def create_post(request, user=None):
+    user_form = PostCreateForm()
     print('CREATE FUNC')
 
     if request.method == 'GET':
@@ -262,11 +263,20 @@ def create_post(request, user=None):
         print(request.POST)
         title = request.POST.get('title') or ''
         content = request.POST.get('content') or ''
-        if title and content:
+        user_form = PostCreateForm(request.POST, request.FILES)
+
+        # if title and content:
+        if user_form.is_valid():
             # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
             # user_post.save()
-            models.Post.objects.create(title=title, content=content, user=request.user)
+            models.Post.objects.create(
+                # title=title,
+                title=user_form.cleaned_data['title'],
+                # content=content,
+                content=user_form.cleaned_data['content'],
+                image=user_form.cleaned_data['image'],
+                user=User.objects.get(username=request.user.username))
             return redirect('/posts')
         else:
-            error = 'Укажите все поля'
-            return render(request, 'posts/create.html', {'title': title, 'content': content, 'error': error})
+            # error = 'Укажите все поля'
+            return render(request, 'posts/create_2.html', {'form' : user_form})#{'title': title, 'content': content, 'error': error})

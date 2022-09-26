@@ -28,7 +28,7 @@ from ckeditor.fields import RichTextField
 class Post(models.Model):
     title = models.CharField(max_length=100)
     content = RichTextField()     #models.TextField()
-    date = models.DateTimeField(default=datetime.datetime.now)  #default=datetime.datetime.now   auto_now_add=True
+    date = models.DateTimeField(auto_now_add=True)  #default=datetime.datetime.now   auto_now_add=True
     image = models.ImageField(upload_to= 'posta_img/%Y/%m/%d', null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
 
