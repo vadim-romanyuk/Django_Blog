@@ -10,7 +10,9 @@ from faker import Faker
 from django.core.paginator import Paginator
 from django.db.models import Q
 from django.db import transaction
-from .forms import PostCreateForm
+from .forms import PostCreateForm, PostModelForms
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from posts import models
 # Fake
 
 
@@ -53,12 +55,6 @@ def fake_create_posts(request):
                 user=u
             ) for _ in range(10000)])
     return redirect('/')
-
-
-
-
-
-
 
 
 def profile(request, user_name):
@@ -192,7 +188,6 @@ def post(request, post_id):
         return HttpResponseNotFound(request)
 
 
-
 def about(request):
     return render(request, 'posts/about.html', {'content': '<h1>About</h1>'})
 
@@ -233,27 +228,27 @@ def delete(request, post_id):
 #     return render(request, 'posts/create.html', {'form': user_form})
 
 
-class CreateView(View):
-
-    def get(self, request):
-        print(request.GET)
-        return render(request, 'posts/create.html')
-
-    def post(self, request, user_form=None):
-        print(request.POST)
-        if request.method == 'GET':
-            return render(request, 'posts/create.html', {'form': user_form, 'qwert': 'asdfdsad'})
-        elif request.method == 'POST':
-            user_form = CreateForm(request.POST)
-            if user_form.is_valid():
-                return redirect('/')
-            return render(request, 'posts/create.html', {'form': user_form})
-
-        return render(request, 'posts/create.html', {'form': user_form})
+# class CreateView(View):
+#
+#     def get(self, request):
+#         print(request.GET)
+#         return render(request, 'posts/create.html')
+#
+#     def post(self, request, user_form=None):
+#         print(request.POST)
+#         if request.method == 'GET':
+#             return render(request, 'posts/create.html', {'form': user_form, 'qwert': 'asdfdsad'})
+#         elif request.method == 'POST':
+#             user_form = CreateForm(request.POST)
+#             if user_form.is_valid():
+#                 return redirect('/')
+#             return render(request, 'posts/create.html', {'form': user_form})
+#
+#         return render(request, 'posts/create.html', {'form': user_form})
 
 
 def create_post(request, user=None):
-    user_form = PostCreateForm()
+    user_form = PostModelForms()
     print('CREATE FUNC')
 
     if request.method == 'GET':
@@ -263,20 +258,62 @@ def create_post(request, user=None):
         print(request.POST)
         title = request.POST.get('title') or ''
         content = request.POST.get('content') or ''
-        user_form = PostCreateForm(request.POST, request.FILES)
+        user_form = PostModelForms(request.POST, request.FILES)
 
         # if title and content:
         if user_form.is_valid():
-            # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
-            # user_post.save()
-            models.Post.objects.create(
-                # title=title,
-                title=user_form.cleaned_data['title'],
-                # content=content,
-                content=user_form.cleaned_data['content'],
-                image=user_form.cleaned_data['image'],
-                user=User.objects.get(username=request.user.username))
+            post_ = user_form.save(commit=False)
+            post_.user = User.objects.get(username=request.user.username)
+            post_.save()
             return redirect('/posts')
         else:
             # error = 'Укажите все поля'
             return render(request, 'posts/create_2.html', {'form' : user_form})#{'title': title, 'content': content, 'error': error})
+
+
+class PostCreateView(CreateView):
+    model = models.Post
+    form_class = PostModelForms
+    success_url = '/'
+    template_name = 'posts/create_2.html'
+
+    def form_valid(self, form):
+        post_ = form.save(commit=False)
+        post_.user = User.objects.get(username=self.request.user.username)
+        post_.save()
+        return super(PostCreateView, self).form_valid(form)
+
+
+
+
+
+
+#было так пока не начали делать формы
+# def create_post(request, user=None):
+#     user_form = PostModelForms()
+#     print('CREATE FUNC')
+#
+#     if request.method == 'GET':
+#         return render(request, 'posts/create_2.html', {'form': user_form})
+#
+#     elif request.method == 'POST':
+#         print(request.POST)
+#         title = request.POST.get('title') or ''
+#         content = request.POST.get('content') or ''
+#         user_form = PostCreateForm(request.POST, request.FILES)
+#
+#         # if title and content:
+#         if user_form.is_valid():
+#             # user_post = models.Post(title=request.POST['title'], content=request.POST['content'])
+#             # user_post.save()
+#             models.Post.objects.create(
+#                 # title=title,
+#                 title=user_form.cleaned_data['title'],
+#                 # content=content,
+#                 content=user_form.cleaned_data['content'],
+#                 image=user_form.cleaned_data['image'],
+#                 user=User.objects.get(username=request.user.username))
+#             return redirect('/posts')
+#         else:
+#             # error = 'Укажите все поля'
+#             return render(request, 'posts/create_2.html', {'form' : user_form})#{'title': title, 'content': content, 'error': error})
