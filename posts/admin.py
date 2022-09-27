@@ -14,7 +14,7 @@ class PostsAdmin(admin.ModelAdmin):
     )
     ordering = ('-date',)
     search_fields = ('title', 'date',)
-
+    readonly_fields = ('date',)
     list_filter = ('user',)
 
     def get_queryset(self, request):
