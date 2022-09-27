@@ -12,6 +12,7 @@ from django.db.models import Q
 from django.db import transaction
 from .forms import PostCreateForm, PostModelForms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from django.views.generic.list import ListView
 from posts import models
 # Fake
 
@@ -274,14 +275,32 @@ def create_post(request, user=None):
 class PostCreateView(CreateView):
     model = models.Post
     form_class = PostModelForms
-    success_url = '/'
+    success_url = '/posts/{id}'
     template_name = 'posts/create_2.html'
 
     def form_valid(self, form):
         post_ = form.save(commit=False)
         post_.user = User.objects.get(username=self.request.user.username)
-        post_.save()
         return super(PostCreateView, self).form_valid(form)
+
+
+class PostUpdateView(UpdateView):
+    model = models.Post
+    form_class = PostModelForms
+    success_url = '/posts/{id}'
+    template_name = 'posts/create_2.html'
+
+
+class PostsShowView(ListView):
+    model = models.Post
+    paginate_by = 100
+    template_name = 'posts/posts.html'
+    context_object_name = 'posts'
+    ordering = ('-date')
+    page_kwarg = 'p'
+
+
+
 
 
 

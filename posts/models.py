@@ -1,4 +1,6 @@
 import datetime
+import os.path
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save, post_delete
@@ -44,6 +46,17 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+    
+    def save(self, force_insert=False, force_update=False, using=None, update_fields=None):
+        try:
+            img = Post.objects.get(id=self.id).image
+            if img and not self.image or img and self.image.path != img.path:
+                print('удаляем старую картинку')
+                if os.path.exists(img.path):
+                    os.remove(img.path)
+        except Post.DoesNotExist:
+            pass
+        return super(Post, self).save(force_insert=False, force_update=False, using=None, update_fields=None)
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
