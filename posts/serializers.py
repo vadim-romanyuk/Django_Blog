@@ -18,6 +18,8 @@ class PostSerializer(serializers.Serializer):
 
 class PostsModelSerializer(serializers.ModelSerializer):
     user = serializers.ReadOnlyField(source='user.username')
+    title = serializers.CharField(required=False)
+    content = serializers.CharField(required=False)
 
     class Meta:
         model = Post
