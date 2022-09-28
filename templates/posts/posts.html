@@ -52,59 +52,59 @@
 <footer class="text-center text-lg-start text-muted">
     <div class="container p-4">
 
-        {% if num_pages != 1 %}
+        {% if page_obj.count != 1 %}
         <nav aria-label="...">
           <ul class="pagination justify-content-center">
 
           {% localize off %}
             {# Первая страница #}
-            {% if page > 2 %}
+            {% if page_obj.number > 2 %}
             <li class="page-item">
                 <a class="page-link" href="{% url 'show_posts' %}?p=1&s={{ search_str }}">1 << </a>
             </li>
             {% endif %}
 
-            <li class="page-item {% if page == 1 %}disabled{% endif %}">
-              <a class="page-link" href="{% url 'show_posts' %}?p={{ page | add:'-1' }}&s={{ search_str }}">Предыдущая</a>
+            <li class="page-item {% if page_obj.number == 1 %}disabled{% endif %}">
+              <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.number | add:'-1' }}&s={{ search_str }}">Предыдущая</a>
             </li>
 
             {# Предыдущая страница #}
-            {% if page != 1 %}
+            {% if page_obj.number != 1 %}
                 <li class="page-item">
-                    <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'-1' }}&s={{ search_str }}">{{ page|add:'-1' }}</a>
+                    <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.number|add:'-1' }}&s={{ search_str }}">{{ page_obj.number|add:'-1' }}</a>
                 </li>
             {% endif %}
 
 
             {# Текущая страница #}
             <li class="page-item active" aria-current="page">
-              <a class="page-link">{{ page }}</a>
+              <a class="page-link">{{ page_obj.number }}</a>
             </li>
 
 
             {# Следующая страница #}
-            {% if num_pages != page %}
+            {% if page_obj.count != page_obj.number %}
             <li class="page-item">
-                <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'1' }}&s={{ search_str }}">{{ page|add:'1' }}</a>
+                <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.number|add:'1' }}&s={{ search_str }}">{{ page_obj.number|add:'1' }}</a>
             </li>
             {% endif %}
 
             {# Запасная страница #}
-            {% if page == 1 and page < num_pages %}
+            {% if page_obj.number == 1 and page_obj.number < page_obj.count %}
             <li class="page-item">
-                <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'2' }}&s={{ search_str }}">{{ page|add:'2' }}</a>
+                <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.number|add:'2' }}&s={{ search_str }}">{{ page_obj.number|add:'2' }}</a>
             </li>
             {% endif %}
 
             {# Следующая страница #}
-            <li class="page-item {% if page == num_pages %}disabled{% endif %}">
-              <a class="page-link" href="{% url 'show_posts' %}?p={{ page|add:'1' }}&s={{ search_str }}">Следующая</a>
+            <li class="page-item {% if page_obj.number == page_obj.count %}disabled{% endif %}">
+              <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.number|add:'1' }}&s={{ search_str }}">Следующая</a>
             </li>
 
             {# Последняя страница #}
-            {% if page < num_pages|add:'-1' %}
+            {% if page_obj.number < page_obj.count|add:'-1' %}
             <li class="page-item">
-              <a class="page-link" href="{% url 'show_posts' %}?p={{ num_pages }}&s={{ search_str }}"> >> {{ num_pages }}</a>
+              <a class="page-link" href="{% url 'show_posts' %}?p={{ page_obj.count }}&s={{ search_str }}"> >> {{ page_obj.count }}</a>
             </li>
             {% endif %}
           {% endlocalize %}
