@@ -17,7 +17,7 @@ class PostSerializer(serializers.Serializer):
 
 
 class PostsModelSerializer(serializers.ModelSerializer):
-    user = serializers.RelatedField(source='user.username')
+    user = serializers.ReadOnlyField(source='user.username')
 
     class Meta:
         model = Post
