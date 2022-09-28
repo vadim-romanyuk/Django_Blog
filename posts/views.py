@@ -1,8 +1,8 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponse, redirect
-from posts.forms import PostCreateForm
-from django.views import View
-from posts import models
+# from posts.forms import PostCreateForm
+# from django.views import View
+# from posts import models
 from django.http import HttpResponseNotAllowed, HttpResponseNotFound
 # from datetime import datetime
 import datetime
@@ -13,7 +13,16 @@ from django.db import transaction
 from .forms import PostCreateForm, PostModelForms
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic.list import ListView
+from django.http import JsonResponse
+from rest_framework.parsers import JSONParser
+# from .serializers import PostSerializer
+from .serializers import PostsModelSerializer
 from posts import models
+from django.views.decorators.csrf import csrf_exempt
+from rest_framework.decorators import api_view
+from rest_framework.views import Response
+
+
 # Fake
 
 
@@ -299,6 +308,61 @@ class PostsShowView(ListView):
     ordering = ('-date')
     page_kwarg = 'p'
 
+
+# def posts_api(request):
+#     if request.method == 'GET':
+#         posts = models.Post.objects.all()[:100]
+#         # print('post^_______', posts)
+#         serializer = PostSerializer(posts, many=True)
+#         # print('serializer^_______', serializer)
+#         return JsonResponse(serializer.data, safe=False)
+
+@api_view(['GET', 'POST'])
+# @csrf_exempt
+def posts_api(request):
+    print(request.user, request.data)
+    if request.method == 'GET':
+        posts = models.Post.objects.all()[:100]
+        # print('post^_______', posts)
+        serializer = PostsModelSerializer(posts, many=True)
+        # print('serializer^_______', serializer)
+        return Response(serializer.data)
+
+    elif request.method == 'POST' and request.user.is_anonymous:
+        # data = JSONParser().parse(request)
+        # print(data)
+        serializer = PostsModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+# запрос для создания поста    http POST http://127.0.0.1:8000/posts/api title=APITEST content=asdga
+# запрос для авторизации    http POST http://127.0.0.1:8000/posts/api title=APITEST -a vadim:password -v
+    else:
+        return Response({'detail': 'not authorized'}, status=401)
+
+
+@api_view(['GET', 'PUT', 'DELETE'])
+def posts_api_m(request, pk):
+
+    try:
+        post = models.Post.objects.get(id=pk)
+    except models.Post.DoesNotExist:
+        return Response(status=401)
+
+    if request.method == 'GET':
+        s = PostsModelSerializer(post)
+        return Response(s.data)
+    elif request.method == 'PUT':
+        s = PostsModelSerializer(post, data=request.data)
+        if s.is_valid():
+            s.save()
+            return Response(s.data)
+        return Response(s.errors, status=401)
+
+    else:
+        post.delete()
+        return Response(status=401)
 
 
 

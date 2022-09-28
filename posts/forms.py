@@ -1,5 +1,6 @@
 from django import forms
 from ckeditor.widgets import CKEditorWidget
+from posts.serializers import PostSerializer
 from .models import Post
 
 

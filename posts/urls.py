@@ -3,6 +3,9 @@ from posts import views as posts_views
 
 
 urlpatterns = [
+# API
+    path('api', posts_views.posts_api),
+    path('api/<int:pk>', posts_views.posts_api_m),
     # path('', posts_views.show_posts, name='show_posts'),
     path('', posts_views.PostsShowView.as_view(), name='show_posts'),
     path('about/', posts_views.about, name='url_to_about'),
@@ -16,5 +19,6 @@ urlpatterns = [
     # path('create/', posts_views.CreateView.as_view(), name='url_to_create_post'),
 # FAKE
     path('fake/users', posts_views.fake_create_user),
-    path('fake/posts', posts_views.fake_create_posts)
+    path('fake/posts', posts_views.fake_create_posts),
+
 ]

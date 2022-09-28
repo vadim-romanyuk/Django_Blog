@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.humanize',
     'posts',
-    'ckeditor'
+    'ckeditor',
+    'rest_framework'
 ]
 
 MIDDLEWARE = [
