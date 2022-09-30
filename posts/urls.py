@@ -17,7 +17,10 @@ urlpatterns = [
     # path('api/v3/<int:pk>', posts_views.PostsView.as_view()),
     path('api/v3/<int:pk>', posts_views.PostRetrieveUpdateDestroyAPIView.as_view()),
 
-    # path('', posts_views.show_posts, name='show_posts'),
+    path('api/v3/users', posts_views.UserListCreateAPIView.as_view()),
+    # path('api/v3/users/<username>', posts_views.UserListCreateAPIView),
+
+        # path('', posts_views.show_posts, name='show_posts'),
     path('', posts_views.PostsShowView.as_view(), name='show_posts'),
     path('about/', posts_views.about, name='url_to_about'),
     # path('create', posts_views.create_post, name='create_post'),

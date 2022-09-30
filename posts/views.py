@@ -16,7 +16,7 @@ from django.views.generic.list import ListView
 from django.http import JsonResponse
 from rest_framework.parsers import JSONParser
 # from .serializers import PostSerializer
-from .serializers import PostsModelSerializer
+from .serializers import PostsModelSerializer, PostPermissions, UserSerializer, UserCreateSerializer
 from posts import models
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view, APIView
@@ -25,6 +25,7 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from rest_framework import generics
 from rest_framework import permissions
+from django.contrib.auth.hashers import make_password
 
 
 
@@ -443,8 +444,44 @@ class PostsListCreateAPIView(generics.ListCreateAPIView):
 
         q = models.Post.objects.filter(query).select_related()
         return q
+
+
 class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
-    queryset =
+    queryset = models.Post.objects.all()
+    serializer_class = PostsModelSerializer
+    permission_classes = [PostPermissions]
+
+
+class UserListCreateAPIView(generics.ListCreateAPIView):
+    queryset = User.objects.all()
+    # serializer_class = UserSerializer
+
+    def get_serializer_class(self):
+        if self.request.method == "GET":
+            return UserSerializer
+        return UserCreateSerializer
+
+    def create(self, request, *args, **kwargs):
+        profile_fields = [f.name for f in models.Profile._meta.get_fields()]
+        user_fields = [f.name for f in User._meta.get_fields()]
+
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        data = dict(serializer.data)
+
+        profile = models.Profile(**{k: v for k, v in data.items() if k in profile_fields})
+        data['password'] = make_password(data['password'])
+        user = User.objects.create(**{k: v for k, v in data.items() if k in user_fields})
+        profile.user = user
+        profile.save()
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+
+
 
 
 
