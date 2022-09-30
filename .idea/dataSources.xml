@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="old" uuid="abc95f95-6610-4660-9eb4-632d28492d10">
+    <data-source source="LOCAL" name="db" uuid="abc95f95-6610-4660-9eb4-632d28492d10">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
@@ -23,7 +23,7 @@
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
     <data-source source="LOCAL" name="db" uuid="1ae3d9e2-eb8f-4145-b6fe-29ddd465351a">
-      <driver-ref>sqlite.xerial</driver-ref>
+      <driver-ref>28bef0df-1294-42e4-bf3c-40fb452abc9d</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
       <jdbc-url>jdbc:sqlite:C:\Django_Blog\db.sqlite3</jdbc-url>
@@ -36,6 +36,13 @@
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.36.0.3/sqlite-jdbc-3.36.0.3.jar</url>
         </library>
       </libraries>
+    </data-source>
+    <data-source source="LOCAL" name="djangotest_db@localhost" uuid="badce522-34ed-444a-8a8b-42724ea1c505">
+      <driver-ref>postgresql</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.postgresql.Driver</jdbc-driver>
+      <jdbc-url>jdbc:postgresql://localhost:5432/djangotest_db</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>

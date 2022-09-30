@@ -21,11 +21,14 @@ import debug_toolbar
 from django.contrib.staticfiles.utils import settings
 from django.contrib.staticfiles.urls import static
 
+# main
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     # for POSTs
     path('', posts_views.show_posts, name='home'),
     path('posts/', include('posts.urls')),
+    # path('api/', include('posts.api.urls')),
     # LOGIN
     path('accounts/', include('django.contrib.auth.urls')),
     path('__debug__/', include(debug_toolbar.urls)),

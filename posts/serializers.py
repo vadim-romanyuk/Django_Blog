@@ -17,11 +17,11 @@ class PostSerializer(serializers.Serializer):
 
 
 class PostsModelSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.username')
+    user = serializers.CharField(source='user.username', read_only=True)
     title = serializers.CharField(required=False)
     content = serializers.CharField(required=False)
 
     class Meta:
         model = Post
-        fields = ['title', 'content', 'date', 'user']
+        fields = ('title', 'content', 'date', 'user')
         read_only_fields = ('date',)

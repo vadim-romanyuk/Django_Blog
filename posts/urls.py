@@ -1,11 +1,22 @@
 from django.urls import path
 from posts import views as posts_views
 
+# POST
+# /posts/
+
 
 urlpatterns = [
 # API
     path('api', posts_views.posts_api),
     path('api/<int:pk>', posts_views.posts_api_m),
+
+    path('api/v2/', posts_views.PostsView.as_view()),
+    path('api/v2/<int:pk>', posts_views.PostsView.as_view()),
+
+    path('api/v3', posts_views.PostsListCreateAPIView.as_view()),
+    # path('api/v3/<int:pk>', posts_views.PostsView.as_view()),
+    path('api/v3/<int:pk>', posts_views.PostRetrieveUpdateDestroyAPIView.as_view()),
+
     # path('', posts_views.show_posts, name='show_posts'),
     path('', posts_views.PostsShowView.as_view(), name='show_posts'),
     path('about/', posts_views.about, name='url_to_about'),

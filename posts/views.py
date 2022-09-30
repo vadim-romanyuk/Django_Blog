@@ -3,7 +3,7 @@ from django.shortcuts import render, HttpResponse, redirect
 # from posts.forms import PostCreateForm
 # from django.views import View
 # from posts import models
-from django.http import HttpResponseNotAllowed, HttpResponseNotFound
+from django.http import HttpResponseNotAllowed, HttpResponseNotFound, Http404
 # from datetime import datetime
 import datetime
 from faker import Faker
@@ -19,8 +19,13 @@ from rest_framework.parsers import JSONParser
 from .serializers import PostsModelSerializer
 from posts import models
 from django.views.decorators.csrf import csrf_exempt
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, APIView
 from rest_framework.views import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from rest_framework import generics
+from rest_framework import permissions
+
 
 
 # Fake
@@ -305,17 +310,34 @@ class PostsShowView(ListView):
     paginate_by = 100
     template_name = 'posts/posts.html'
     context_object_name = 'posts'
-    ordering = ('-date')
+    ordering = ('-date',)
     page_kwarg = 'p'
 
+    def get_queryset(self):
+        if self.request.GET.get('d'):
+            date = datetime.datetime.strptime(self.request.GET['d'], '%Y-%m-%d')
+            date_to = date + datetime.timedelta(days=1)
+            date_query = (Q(date__gte=date) & Q(date__lt=date_to))
+        else:
+            date_query = Q()
 
-# def posts_api(request):
-#     if request.method == 'GET':
-#         posts = models.Post.objects.all()[:100]
-#         # print('post^_______', posts)
-#         serializer = PostSerializer(posts, many=True)
-#         # print('serializer^_______', serializer)
-#         return JsonResponse(serializer.data, safe=False)
+        if self.request.GET.get('s'):
+            s = self.request.GET['s']
+            q1 = models.Post.objects.filter(
+                date_query & Q(title__contains=s) & ~Q(content__contains=s)
+            ).order_by('-date')
+            q2 = models.Post.objects.filter(
+                date_query & ~Q(title__contains=s) & Q(content__contains=s)
+            ).order_by('-date')
+
+            q =q1 | q2
+
+        else:
+            q = models.Post.objects.filter(date_query).order_by('-date').all().values('id', 'title', 'user', 'date')
+        return q
+
+
+
 
 @api_view(['GET', 'POST'])
 # @csrf_exempt
@@ -363,6 +385,74 @@ def posts_api_m(request, pk):
     else:
         post.delete()
         return Response(status=401)
+
+
+class PostsView(APIView):
+
+    def get(self, request):
+        posts = models.Post.objects.all()[:100]
+        s = PostsModelSerializer(posts, many=True)
+        return Response(s.data)
+
+    def post(self, request):
+        print(request.data)
+        serializer = PostsModelSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
+
+    def put(self, request, pk):
+        try:
+            post = models.Post.objects.get(id=pk)
+        except models.Post.DoesNotExist:
+            raise Http404
+
+        s = PostsModelSerializer(post, data=request.data, partial=True)
+        if s.is_valid():
+            s.save()
+            return Response(s.data)
+        return Response(s.errors, status=401)
+
+    def delete(self, request, pk):
+        post = get_object_or_404(models.Post, pk=pk)
+        post.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class PostsListCreateAPIView(generics.ListCreateAPIView):
+    serializer_class = PostsModelSerializer
+    queryset = models.Post.objects.all()
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
+
+    def get_queryset(self):
+        query = Q()
+
+        if self.request.GET.get('date'):
+            date = datetime.datetime.strptime(self.request.GET['date'], '%Y-%m-%d')
+            date_to = date + datetime.timedelta(days=1)
+            query = Q(date__gte=date) & Q(date__lt=date_to)
+
+        if self.request.GET.get('search'):
+            s = self.request.GET['search']
+            query &= (Q(title__contains=s) | Q(contenet__contains=s))
+
+        q = models.Post.objects.filter(query).select_related()
+        return q
+class PostRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset =
+
+
+
+
+
+
+
+
 
 
 
